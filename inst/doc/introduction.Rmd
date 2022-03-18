@@ -240,21 +240,3 @@ plot_ma(T47D_diff_testing, dds, highlight_genes = c("CLEC2B", "PAGE5", "GAPDH"))
 ```{r}
 sessionInfo()
 ```
-
-
-```{r}
-library("ggplot2")
-
-
-manuf <- unique(mpg$manufacturer)
-
-plots <- lapply(manuf, function(x){
-  df <- mpg[mpg$manufacturer==x,]
-  ggplot(df, aes(cty, hwy)) +
-      geom_point() +
-      labs(title=x)  
-})
-
-save_plots_to_pdf(plots, ncol=3, nrow=2)
-```
-

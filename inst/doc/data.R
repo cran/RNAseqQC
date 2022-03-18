@@ -1,23 +1,11 @@
-## ---- include = FALSE---------------------------------------------------------
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  warning = FALSE,
-  fig.width = 8,
-  fig.height = 5,
-  max.print = 100,
-  cache = FALSE
-)
-
-## ----results="hide"-----------------------------------------------------------
-library("recount3")
-library("dplyr")
-library("stringr")
-library("SummarizedExperiment")
-library("tidyr")
-library("tibble")
-library("magrittr")
+## ----eval=FALSE---------------------------------------------------------------
+#  library("recount3")
+#  library("dplyr")
+#  library("stringr")
+#  library("SummarizedExperiment")
+#  library("tidyr")
+#  library("tibble")
+#  library("magrittr")
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  

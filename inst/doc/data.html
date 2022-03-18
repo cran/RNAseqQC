@@ -349,28 +349,30 @@ be reproduced.</p>
 </div>
 <div id="download-gse89888-via-recount3-and-format-data" class="section level1">
 <h1>Download GSE89888 via recount3 and format data</h1>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># download data recount3</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>proj_info <span class="ot">&lt;-</span> <span class="fu">available_projects</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(project <span class="sc">==</span> <span class="st">&quot;SRP093386&quot;</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">create_rse</span>(proj_info)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>count_mat <span class="ot">&lt;-</span> <span class="fu">assay</span>(se)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(count_mat) <span class="ot">&lt;-</span> <span class="fu">str_replace</span>(<span class="fu">rownames</span>(count_mat), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.[:number:]+$&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">colData</span>(se) <span class="sc">%&gt;%</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(sra.sample_title, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;cell_line&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;mutation&quot;</span>, <span class="st">&quot;replicate&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cell_line, treatment, mutation, replicate)</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(count_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(meta<span class="sc">$</span>treatment, <span class="st">&quot;_&quot;</span>, meta<span class="sc">$</span>mutation, <span class="st">&quot;_&quot;</span>, meta<span class="sc">$</span>replicate)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># subset to cell line T47D</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>count_mat <span class="ot">&lt;-</span> count_mat[, meta<span class="sc">$</span>cell_line <span class="sc">==</span> <span class="st">&quot;T47D&quot;</span>]</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> meta[meta<span class="sc">$</span>cell_line <span class="sc">==</span> <span class="st">&quot;T47D&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;mutation&quot;</span>, <span class="st">&quot;replicate&quot;</span>)]</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>T47D <span class="ot">&lt;-</span> <span class="fu">make_dds</span>(count_mat, meta, <span class="at">ah_record =</span> <span class="st">&quot;AH89426&quot;</span>)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>T47D <span class="ot">&lt;-</span> T47D[<span class="fu">rowSums</span>(<span class="fu">assay</span>(T47D))<span class="sc">&gt;</span><span class="dv">0</span>,]</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download data recount3</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>proj_info <span class="ot">&lt;-</span> <span class="fu">available_projects</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(project <span class="sc">==</span> <span class="st">&quot;SRP093386&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>se <span class="ot">&lt;-</span> <span class="fu">create_rse</span>(proj_info)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>count_mat <span class="ot">&lt;-</span> <span class="fu">assay</span>(se)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(count_mat) <span class="ot">&lt;-</span> <span class="fu">str_replace</span>(<span class="fu">rownames</span>(count_mat), <span class="st">&quot;</span><span class="sc">\\</span><span class="st">.[:number:]+$&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">colData</span>(se) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(sra.sample_title, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">&quot;cell_line&quot;</span>, <span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;mutation&quot;</span>, <span class="st">&quot;replicate&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;-&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(cell_line, treatment, mutation, replicate)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(count_mat) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(meta<span class="sc">$</span>treatment, <span class="st">&quot;_&quot;</span>, meta<span class="sc">$</span>mutation, <span class="st">&quot;_&quot;</span>, meta<span class="sc">$</span>replicate)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># subset to cell line T47D</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>count_mat <span class="ot">&lt;-</span> count_mat[, meta<span class="sc">$</span>cell_line <span class="sc">==</span> <span class="st">&quot;T47D&quot;</span>]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> meta[meta<span class="sc">$</span>cell_line <span class="sc">==</span> <span class="st">&quot;T47D&quot;</span>, <span class="fu">c</span>(<span class="st">&quot;treatment&quot;</span>, <span class="st">&quot;mutation&quot;</span>, <span class="st">&quot;replicate&quot;</span>)]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>T47D <span class="ot">&lt;-</span> <span class="fu">make_dds</span>(count_mat, meta, <span class="at">ah_record =</span> <span class="st">&quot;AH89426&quot;</span>)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>T47D <span class="ot">&lt;-</span> T47D[<span class="fu">rowSums</span>(<span class="fu">assay</span>(T47D))<span class="sc">&gt;</span><span class="dv">0</span>,]</span></code></pre></div>
+</div>
+<div id="differential-testing" class="section level1">
+<h1>Differential testing</h1>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> T47D</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">filter_genes</span>(dds, <span class="at">min_count =</span> <span class="dv">5</span>, <span class="at">min_rep =</span> <span class="dv">4</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>dds<span class="sc">$</span>mutation <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(dds<span class="sc">$</span>mutation)</span>

@@ -11,23 +11,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  message = FALSE,
-  warning = FALSE,
-  fig.width = 8,
-  fig.height = 5,
-  max.print = 100,
-  cache = FALSE
-)
-```
-
 Here we quickly show how the data objects of the example data set can be reproduced.
 
 # Load Packages
-```{r results="hide"}
+```{r eval=FALSE}
 library("recount3")
 library("dplyr")
 library("stringr")
@@ -63,7 +50,7 @@ T47D <- make_dds(count_mat, meta, ah_record = "AH89426")
 T47D <- T47D[rowSums(assay(T47D))>0,]
 ```
 
-
+# Differential testing
 ```{r eval=FALSE}
 dds <- T47D
 dds <- filter_genes(dds, min_count = 5, min_rep = 4)
@@ -84,7 +71,3 @@ T47D_diff_testing$stat <- NULL
 T47D_diff_testing$lfcSE <- NULL
 T47D_diff_testing$pvalue <- NULL
 ```
-
-
-
-
