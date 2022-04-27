@@ -16,6 +16,7 @@ Here we quickly show how the data objects of the example data set can be reprodu
 # Load Packages
 ```{r eval=FALSE}
 library("recount3")
+library("DESeq2")
 library("dplyr")
 library("stringr")
 library("SummarizedExperiment")
@@ -48,6 +49,9 @@ meta <- meta[meta$cell_line == "T47D", c("treatment", "mutation", "replicate")]
 
 T47D <- make_dds(count_mat, meta, ah_record = "AH89426")
 T47D <- T47D[rowSums(assay(T47D))>0,]
+
+# round some numeric data to reduce the size of the data object
+rowData(T47D)$gc_content <- round(rowData(T47D)$gc_content,1)
 ```
 
 # Differential testing

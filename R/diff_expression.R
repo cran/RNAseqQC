@@ -45,9 +45,7 @@ plot_ma <- function(de_res, dds, annotate_top_n = 5, highlight_genes = NULL) {
   # treat special case if de_res resulted from lfcShrink()
   # with a method that produced svalues
   if ("svalue" %in% colnames(de_res)) {
-    de_res <- de_res %>%
-      rename(pvalue = svalue) %>%
-      mutate(padj = p.adjust(pvalue, method = "BH"))
+    colnames(de_res)[colnames(de_res)=="svalue"] <- "padj"
   }
 
   de_res <- de_res %>%

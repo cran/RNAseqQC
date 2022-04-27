@@ -25,7 +25,7 @@
 make_dds <- function(counts, metadata, ah_record) {
 
   # prevent 'no visible binding for global variable' package warnings
-  seqnames <- gene_id <- gene_name <- gene_biotype <- chromosome <- start <- NULL
+  seqnames <- gene_id <- gene_name <- tx_id <- gc_content <- gene_biotype <- chromosome <- start <- NULL
 
   if (ncol(counts) != nrow(metadata)) {
     stop("The number columns in 'counts' does not equal the number of metadata rows.")
@@ -50,6 +50,14 @@ make_dds <- function(counts, metadata, ah_record) {
     as_tibble() %>%
     mutate(chromosome = as.character(seqnames)) %>%
     select(gene_id, gene_name, gene_biotype, chromosome, chr_start = start)
+
+  gc_info <- ensembldb::transcripts(edb, filter = AnnotationFilter::GeneIdFilter(rownames(counts))) %>%
+    as_tibble() %>%
+    dplyr::select(tx_id, gene_id, gc_content) %>%
+    group_by(gene_id) %>%
+    summarize(gc_content = stats::median(gc_content), .groups = "drop")
+
+  ensembl_info <- left_join(ensembl_info, gc_info, by="gene_id")
 
   not_annotated_genes <- setdiff(rownames(counts), ensembl_info$gene_id)
   if (length(not_annotated_genes)) {

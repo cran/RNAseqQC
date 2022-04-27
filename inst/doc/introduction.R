@@ -40,8 +40,7 @@ dds <- T47D
 ## ---- eval=FALSE--------------------------------------------------------------
 #  mcols(AnnotationHub()) %>%
 #    as_tibble(rownames = "record_id") %>%
-#    dplyr::filter(rdataclass == "EnsDb") %>%
-#    dplyr::filter(str_detect(title, "sapiens"))
+#    dplyr::filter(rdataclass == "EnsDb")
 
 ## -----------------------------------------------------------------------------
 plot_total_counts(dds)
@@ -63,7 +62,7 @@ vsd <- vst(dds)
 mean_sd_plot(vsd)
 
 ## -----------------------------------------------------------------------------
-map(c("1", "5", "14", "X"), ~plot_chromosome(vsd, .x))
+map(c("1", "5", "14"), ~plot_chromosome(vsd, .x))
 
 ## ---- fig.width=8, fig.height=12, out.width="95%"-----------------------------
 # define new grouping variable
@@ -86,6 +85,7 @@ plot_loadings(pca_res, PC = 1, annotate_top_n = 5)
 plot_loadings(pca_res, PC = 1, highlight_genes = c("CD34", "FLT1", "MAPT"))
 plot_loadings(pca_res, PC = 4, color_by = "gene_biotype", show_plot = F)$plot +
   theme(legend.position = "bottom")
+plot_loadings(pca_res, PC = 2, color_by = "gc_content")
 
 ## -----------------------------------------------------------------------------
 dds <- estimateSizeFactors(dds)

@@ -1,5 +1,6 @@
 ## ----eval=FALSE---------------------------------------------------------------
 #  library("recount3")
+#  library("DESeq2")
 #  library("dplyr")
 #  library("stringr")
 #  library("SummarizedExperiment")
@@ -30,6 +31,9 @@
 #  
 #  T47D <- make_dds(count_mat, meta, ah_record = "AH89426")
 #  T47D <- T47D[rowSums(assay(T47D))>0,]
+#  
+#  # round some numeric data to reduce the size of the data object
+#  rowData(T47D)$gc_content <- round(rowData(T47D)$gc_content,1)
 
 ## ----eval=FALSE---------------------------------------------------------------
 #  dds <- T47D
