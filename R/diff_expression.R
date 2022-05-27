@@ -138,7 +138,7 @@ plot_within_level_sample_MAs <- function(vsd, group, level, y_lim = 4) {
   # samples of the level
   level_samples <- colnames(vsd)[vsd[[group]] == level]
   # gene-wise median
-  median_sample <- rowMedians(assay(vsd)[, level_samples, drop = F])
+  median_sample <- rowMedians(assay(vsd)[, level_samples, drop = F], na.rm=T)
 
   map(level_samples, function(s) {
     tibble(sample = median_sample, reference = assay(vsd)[, s]) %>%

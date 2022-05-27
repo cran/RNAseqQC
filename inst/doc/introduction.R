@@ -87,6 +87,9 @@ plot_loadings(pca_res, PC = 4, color_by = "gene_biotype", show_plot = F)$plot +
   theme(legend.position = "bottom")
 plot_loadings(pca_res, PC = 2, color_by = "gc_content")
 
+## ---- fig.width=10, fig.height=10, out.width="95%"----------------------------
+plot_pca_scatters(vsd, n_PCs = 5, color_by = "treatment", shape_by = "mutation")
+
 ## -----------------------------------------------------------------------------
 dds <- estimateSizeFactors(dds)
 plot_gene("CLEC2B", dds, x_var = "mutation", color_by = "treatment")

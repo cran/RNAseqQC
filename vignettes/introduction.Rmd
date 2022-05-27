@@ -160,6 +160,12 @@ plot_loadings(pca_res, PC = 4, color_by = "gene_biotype", show_plot = F)$plot +
 plot_loadings(pca_res, PC = 2, color_by = "gc_content")
 ```
 
+To investigate multiple PCs simultaneously, we can also make a matrix of scatter plots, to plot all pairs of principal components against each other.
+```{r, fig.width=10, fig.height=10, out.width="95%"}
+plot_pca_scatters(vsd, n_PCs = 5, color_by = "treatment", shape_by = "mutation")
+```
+
+
 # Differential expression
 
 Differential expression analysis is one of the most common tasks for investigating RNA-seq data and can be also used for quality assessment. Before doing differential testing, we start by actually plotting the expression pattern of interesting genes.

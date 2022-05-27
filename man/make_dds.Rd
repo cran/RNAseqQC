@@ -4,19 +4,23 @@
 \alias{make_dds}
 \title{Make DESeqDataSet from counts matrix and metadata}
 \usage{
-make_dds(counts, metadata, ah_record)
+make_dds(counts, metadata, ah_record, design = ~1)
 }
 \arguments{
 \item{counts}{The genes x samples counts matrix. The row names must be ENSEMBL gene IDs.}
 
 \item{metadata}{data.frame of sample information. Order of rows corresponds to the order of columns in the counts matrix.}
 
-\item{ah_record}{ID of AnnotationHub record used to retrieve an \code{EnsDb} object.
-To view all valid record IDs, run\preformatted{library(AnnotationHub)
+\item{ah_record}{ID of AnnotationHub record used to retrieve an \code{EnsDb} object.}
+
+\item{design}{The design formula specified in \code{DESeqDataSet()}
+To view all valid record IDs, run
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{library(AnnotationHub)
 mcols(AnnotationHub()) \%>\%
  as_tibble(rownames="ah_record") \%>\%
  filter(rdataclass=="EnsDb")
-}}
+}\if{html}{\out{</div>}}}
 }
 \value{
 A \code{DESeq2::DESeqDataSet} object containing the counts matrix and metadata.

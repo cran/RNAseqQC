@@ -3,6 +3,7 @@
 #' @param counts The genes x samples counts matrix. The row names must be ENSEMBL gene IDs.
 #' @param metadata data.frame of sample information. Order of rows corresponds to the order of columns in the counts matrix.
 #' @param ah_record ID of AnnotationHub record used to retrieve an `EnsDb` object.
+#' @param design The design formula specified in `DESeqDataSet()`
 #' To view all valid record IDs, run
 #' ```
 #' library(AnnotationHub)
@@ -22,7 +23,7 @@
 #' }
 #'
 #' @export
-make_dds <- function(counts, metadata, ah_record) {
+make_dds <- function(counts, metadata, ah_record, design = ~1) {
 
   # prevent 'no visible binding for global variable' package warnings
   seqnames <- gene_id <- gene_name <- tx_id <- gc_content <- gene_biotype <- chromosome <- start <- NULL
@@ -69,7 +70,7 @@ make_dds <- function(counts, metadata, ah_record) {
     mutate(gene_name = ifelse(is.na(gene_name), gene_id, gene_name)) %>%
     column_to_rownames("gene_id")
 
-  dds <- suppressMessages(DESeq2::DESeqDataSetFromMatrix(counts, colData=metadata, rowData=row_data, design = ~1))
+  dds <- suppressMessages(DESeq2::DESeqDataSetFromMatrix(counts, colData=metadata, rowData=row_data, design = design))
   # somehow in the design, there is also an environment stored, which bloats the whole dds object
   environment(DESeq2::design(dds)) <- NULL
   dds

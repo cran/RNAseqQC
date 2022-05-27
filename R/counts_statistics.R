@@ -85,25 +85,20 @@ plot_library_complexity <- function(dds) {
   # prevent 'no visible binding for global variable' package warnings
   gene_id <- count <- sample_id <- fraction_of_genes <- fraction_of_counts <- NULL
 
-  assay(dds) %>%
-    as_tibble(rownames = "gene_id", .name_repair = "unique") %>%
-    # if there are not unique colnames, name_repair messages are shown
-    suppressMessages() %>%
-    pivot_longer(-gene_id, names_to = "sample_id", values_to = "count") %>%
-    mutate(count = as.numeric(count)) %>%
-    arrange(-count) %>%
-    group_by(sample_id) %>%
-    mutate(
-      fraction_of_counts = cumsum(count) / sum(count),
-      fraction_of_genes = row_number() / length(gene_id)
-    ) %>%
-    ungroup() %>%
+  purrr::map_dfr(1:ncol(dds), function(i) {
+    cts <- sort(assay(dds)[,i], decreasing=T)
+    tibble(
+      sample_id = SummarizedExperiment::colnames(dds)[i],
+      fraction_of_counts = cumsum(cts)/sum(cts),
+      fraction_of_genes = (1:length(cts))/length(cts)
+    )
+  }) %>%
     ggplot(aes(fraction_of_genes, fraction_of_counts, group = sample_id, label = sample_id)) +
-    geom_line(alpha = .2) +
-    theme_minimal() +
-    scale_x_sqrt(breaks = c(.01, .05, .1, .2, .5, 1)) +
-    scale_y_continuous(breaks = seq(0, 1, .2)) +
-    labs(x = "fraction of genes", y = "fraction of counts") +
-    theme(legend.position = "none") +
-    cowplot::theme_cowplot()
+      geom_line(alpha = .2) +
+      theme_minimal() +
+      scale_x_sqrt(breaks = c(.01, .05, .1, .2, .5, 1)) +
+      scale_y_continuous(breaks = seq(0, 1, .2)) +
+      labs(x = "fraction of genes", y = "fraction of counts") +
+      theme(legend.position = "none") +
+      cowplot::theme_cowplot()
 }

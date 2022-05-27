@@ -5,7 +5,7 @@
 #' @param PC_y The PC to show on the y-axis.
 #' @param n_feats Number of top-variable features to include.
 #' @param scale_feats Whether to scale the features.
-#' @param na_frac Only consider features with the stated maximum fraction of NAs. NAs will be mean-imputed for PCA.
+#' @param na_frac Only consider features with the stated maximum fraction of NAs or NaNs. NA/NaNs will be mean-imputed for PCA.
 #' @param metadata A data.frame used for annotating samples. `rownames(metadata)` must match `colnames(obj)`.
 #' @param color_by Variable by which to color points. Must be a column in metadata or in `colData(obj)`.
 #' @param shape_by Variable by which to color points. Must be a column in metadata or in `colData(obj)`.
@@ -41,12 +41,17 @@ plot_pca <- function(obj, PC_x = 1, PC_y = 2, n_feats = 500, scale_feats = FALSE
     stop("Object is not a matrix or SummarizedExperiment")
   }
 
+  mat[!is.finite(mat)] <- NA
+
   # subset to features with maximum specified fraction of NAs
-  mat <- mat[rowSums(is.na(mat)) / ncol(mat) <= na_frac, ]
-  # subset to top-variable features
-  mat <- mat[matrixStats::rowVars(mat, na.rm = T) %>%
-    order(decreasing = T) %>%
-    head(n_feats), ]
+  nrow_mat_original <- nrow(mat)
+  mat <- mat[rowSums(is.na(mat))/ncol(mat) <= na_frac, ]
+  if(nrow(mat) == 0) {
+    stop("There are no features passing the 'na_frac' filtering criterion.")
+  } else if (nrow(mat) / nrow_mat_original < 1/100) {
+    warning("Less than 1% of the features pass the 'na'frac filtering criterion.")
+  }
+
   # center rows
   mat_centered <- mat %>%
     t() %>%
@@ -54,6 +59,8 @@ plot_pca <- function(obj, PC_x = 1, PC_y = 2, n_feats = 500, scale_feats = FALSE
     t()
   # mean impute NAs
   mat_centered[is.na(mat_centered)] <- 0
+  # subset to top-variable features
+  mat <- mat[matrixStats::rowVars(mat, na.rm = T) %>% order(decreasing = T) %>% head(n_feats), ]
   # do PCA
   pca <- prcomp(t(mat_centered))
   pca_data <- as_tibble(pca$x, rownames = "sample_id")
@@ -156,4 +163,72 @@ plot_loadings <- function(pca_res, PC = 1, color_by = NULL, annotate_top_n = 0, 
   }
 
   invisible(list("plot" = plot, "data" = loadings_df))
+}
+
+#' Plot matrix of PCA scatter plots
+#'
+#' @param obj A (features x samples) matrix or SummarizedExperiment object
+#' @param n_PCs Number of principal components to plot
+#' @param show_var_exp Whether to show a plot of the percentage of variance explained by each PC in the bottom left corner.
+#' @param n_feats Number of top-variable features to include.
+#' @param scale_feats Whether to scale the features.
+#' @param na_frac Only consider features with the stated maximum fraction of NAs or NaNs. NA/NaNs will be mean-imputed for PCA.
+#' @param metadata A data.frame used for annotating samples. `rownames(metadata)` must match `colnames(obj)`.
+#' @param color_by Variable by which to color points. Must be a column in metadata or in `colData(obj)`.
+#' @param shape_by Variable by which to color points. Must be a column in metadata or in `colData(obj)`.
+#' @param point_alpha alpha value of `geom_point()`
+#' @param point_rel_size relative size of `geom_point()`
+#'
+#' @examples
+#' set.seed(1)
+#' data <- matrix(rnorm(100*6), ncol=6)
+#' data <- t(t(data)+c(-1, -1.1, -1.2, 1, 1.1, 1.2))
+#' plot_pca_scatters(data)
+#'
+#' @return The function displays the scatter plots of the PCs
+#' @export
+plot_pca_scatters <- function(obj, n_PCs = min(10,nrow(obj),ncol(obj)), show_var_exp = T, n_feats = 500, scale_feats = FALSE, na_frac = 0.3, metadata = NULL, color_by = NULL, shape_by = NULL, point_alpha = 0.7, point_rel_size = 2){
+
+  # prevent 'no visible binding for global variable' package warnings
+  x <- NULL
+
+  pca_res <- plot_pca(obj, show_plot = F, n_feats = n_feats, scale_feats = scale_feats, na_frac = na_frac,
+                      metadata = metadata, color_by = color_by, shape_by = shape_by,
+                      point_alpha = point_alpha, point_rel_size = point_rel_size)
+
+  pca_data <- pca_res$data
+
+
+  # all pairwise combinations
+  plots <- purrr::map2(rep(1:n_PCs,n_PCs), sort(rep(1:n_PCs,n_PCs)), function(pc1,pc2) {
+
+    df <- pca_data
+    df$pc1 <- df[[str_c("PC",pc1)]]
+    df$pc2 <- df[[str_c("PC",pc2)]]
+
+    df %>%
+      ggplot(aes_string(x="pc1", y="pc2", color=color_by, shape=shape_by)) +
+        geom_point(alpha = point_alpha, size = rel(point_rel_size)) +
+        labs(x=str_c("PC",pc1), y=str_c("PC",pc2)) +
+        cowplot::theme_cowplot()
+  })
+
+  remove <- matrix(F, ncol=n_PCs, nrow=n_PCs)
+  remove[lower.tri(remove, diag=T)] <- T
+  remove <- as.logical(t(remove))
+  suppressWarnings(plots[remove] <- map(1:sum(remove), cowplot::ggdraw))
+  subset <- as.integer(t(matrix(1:n_PCs^2, ncol=n_PCs, byrow = T)[-n_PCs,-1]))
+
+  if(show_var_exp){
+    p_var_exp <- data.frame(x=pca_res$var_exp[1:n_PCs]) %>%
+      ggplot(aes(rank(-x),x)) +
+        geom_point(size = rel(point_rel_size)) +
+        scale_y_log10() +
+        labs(x = "PC", y="% variance explained") +
+        cowplot::theme_cowplot()
+
+    plots[subset][[(n_PCs-1)*(n_PCs-2)+1]] <- p_var_exp
+  }
+
+  patchwork::wrap_plots(plots[subset], nrow=n_PCs-1, ncol=n_PCs-1, guides="collect")
 }
