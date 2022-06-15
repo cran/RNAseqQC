@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
 ## ---- results="hide"----------------------------------------------------------
 library("RNAseqQC")
 library("DESeq2")
+library("ensembldb")
 library("dplyr")
 library("ggplot2")
 library("purrr")
@@ -38,7 +39,7 @@ meta
 dds <- T47D
 
 ## ---- eval=FALSE--------------------------------------------------------------
-#  mcols(AnnotationHub()) %>%
+#  mcols(AnnotationHub::AnnotationHub()) %>%
 #    as_tibble(rownames = "record_id") %>%
 #    dplyr::filter(rdataclass == "EnsDb")
 
@@ -87,7 +88,7 @@ plot_loadings(pca_res, PC = 4, color_by = "gene_biotype", show_plot = F)$plot +
   theme(legend.position = "bottom")
 plot_loadings(pca_res, PC = 2, color_by = "gc_content")
 
-## ---- fig.width=10, fig.height=10, out.width="95%"----------------------------
+## ---- fig.width=10, fig.height=9.5, out.width="95%"---------------------------
 plot_pca_scatters(vsd, n_PCs = 5, color_by = "treatment", shape_by = "mutation")
 
 ## -----------------------------------------------------------------------------

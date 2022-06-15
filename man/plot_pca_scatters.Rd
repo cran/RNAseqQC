@@ -48,9 +48,10 @@ The function displays the scatter plots of the PCs
 Plot matrix of PCA scatter plots
 }
 \examples{
+\donttest{
 set.seed(1)
 data <- matrix(rnorm(100*6), ncol=6)
 data <- t(t(data)+c(-1, -1.1, -1.2, 1, 1.1, 1.2))
 plot_pca_scatters(data)
-
+}
 }

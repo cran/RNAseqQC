@@ -101,10 +101,12 @@ filter_genes <- function(dds, min_count = 5, min_rep = 3) {
 #'
 #' @return A ggplot object of the ggplot2 package that contains the mean-sd plot.
 #' @examples
+#' \donttest{
 #' library("DESeq2")
 #' dds <- makeExampleDESeqDataSet(interceptMean=10, n=5000)
 #' vsd <- vst(dds)
 #' mean_sd_plot(vsd)
+#' }
 #' @export
 mean_sd_plot <- function(vsd) {
   vsn::meanSdPlot(assay(vsd), plot = FALSE)$gg + cowplot::theme_cowplot()

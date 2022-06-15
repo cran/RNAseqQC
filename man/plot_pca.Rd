@@ -51,6 +51,11 @@ the data.frame to make the plot, the vector of percentages of variance explained
 \description{
 Plot results of a principal component analysis
 }
+\details{
+If the \code{metadata} or \code{colData} of \code{obj} contain a column \code{colname}, this colum will be removed in the \verb{$pca_data} slot,
+because this column contains the colnames of the data matrix. Similarly, for the \verb{$loadings} slot, the column \code{rowname} is
+reserved for the rownames of the data matrix.
+}
 \examples{
 set.seed(1)
 data <- matrix(rnorm(100*6), ncol=6)

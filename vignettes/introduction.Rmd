@@ -32,6 +32,7 @@ We start with loading relevant packages for the analysis.
 ```{r, results="hide"}
 library("RNAseqQC")
 library("DESeq2")
+library("ensembldb")
 library("dplyr")
 library("ggplot2")
 library("purrr")
@@ -68,7 +69,7 @@ dds <- T47D
 
 Records for other species can be found by running the following code. Ideally, the AnnotationHub record should match the genome build against which the sequencing reads were aligned.
 ```{r, eval=FALSE}
-mcols(AnnotationHub()) %>%
+mcols(AnnotationHub::AnnotationHub()) %>%
   as_tibble(rownames = "record_id") %>%
   dplyr::filter(rdataclass == "EnsDb")
 ```
@@ -161,7 +162,7 @@ plot_loadings(pca_res, PC = 2, color_by = "gc_content")
 ```
 
 To investigate multiple PCs simultaneously, we can also make a matrix of scatter plots, to plot all pairs of principal components against each other.
-```{r, fig.width=10, fig.height=10, out.width="95%"}
+```{r, fig.width=10, fig.height=9.5, out.width="95%"}
 plot_pca_scatters(vsd, n_PCs = 5, color_by = "treatment", shape_by = "mutation")
 ```
 

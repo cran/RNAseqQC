@@ -18,8 +18,10 @@ Create a mean-sd plot
 Make a scatterplot that shows for each gene its standard deviation versus mean.
 }
 \examples{
+\donttest{
 library("DESeq2")
 dds <- makeExampleDESeqDataSet(interceptMean=10, n=5000)
 vsd <- vst(dds)
 mean_sd_plot(vsd)
+}
 }
