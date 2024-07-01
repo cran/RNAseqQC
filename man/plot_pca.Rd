@@ -16,7 +16,9 @@ plot_pca(
   shape_by = NULL,
   point_alpha = 0.7,
   point_rel_size = 2,
-  show_plot = TRUE
+  show_plot = TRUE,
+  rasterise = FALSE,
+  ...
 )
 }
 \arguments{
@@ -34,7 +36,8 @@ plot_pca(
 
 \item{metadata}{A data.frame used for annotating samples. \code{rownames(metadata)} must match \code{colnames(obj)}.}
 
-\item{color_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.}
+\item{color_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.
+Alternatively, it can be the name of a feature (a rowname of obj) or a gene name (an element of rowData(obj)$gene_name).}
 
 \item{shape_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.}
 
@@ -43,6 +46,10 @@ plot_pca(
 \item{point_rel_size}{relative size of \code{geom_point()}}
 
 \item{show_plot}{Whether to show the plot or not}
+
+\item{rasterise}{Whether to rasterise the point, using ggrastr.}
+
+\item{...}{Other parameters passed on to ggrastr::rasterise}
 }
 \value{
 The function displays the plot and returns invisible a list of the plot,

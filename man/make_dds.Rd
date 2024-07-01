@@ -7,7 +7,8 @@
 make_dds(counts, metadata, ah_record, design = ~1)
 }
 \arguments{
-\item{counts}{The genes x samples counts matrix. The row names must be ENSEMBL gene IDs.}
+\item{counts}{The genes x samples counts matrix with row names. At least one row name must be an ENSEMBL gene ID,
+since gene annotation is done via the ENSEMBL database.}
 
 \item{metadata}{data.frame of sample information. Order of rows corresponds to the order of columns in the counts matrix.}
 

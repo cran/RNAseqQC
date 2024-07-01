@@ -15,7 +15,7 @@
 #    filter(project == "SRP093386")
 #  se <- create_rse(proj_info)
 #  
-#  count_mat <- assay(se)
+#  count_mat <- compute_read_counts(se)
 #  rownames(count_mat) <- str_replace(rownames(count_mat), "\\.[:number:]+$", "")
 #  
 #  meta <- colData(se) %>%

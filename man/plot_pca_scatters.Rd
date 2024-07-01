@@ -15,7 +15,10 @@ plot_pca_scatters(
   color_by = NULL,
   shape_by = NULL,
   point_alpha = 0.7,
-  point_rel_size = 2
+  point_rel_size = 2,
+  transpose = FALSE,
+  rasterise = FALSE,
+  ...
 )
 }
 \arguments{
@@ -33,13 +36,20 @@ plot_pca_scatters(
 
 \item{metadata}{A data.frame used for annotating samples. \code{rownames(metadata)} must match \code{colnames(obj)}.}
 
-\item{color_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.}
+\item{color_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.
+Alternatively, it can be the name of a feature (a rowname of obj) or a gene name (an element of rowData(obj)$gene_name).}
 
 \item{shape_by}{Variable by which to color points. Must be a column in metadata or in \code{colData(obj)}.}
 
 \item{point_alpha}{alpha value of \code{geom_point()}}
 
 \item{point_rel_size}{relative size of \code{geom_point()}}
+
+\item{transpose}{Wheter to transpose the whole matrix of scatter plots}
+
+\item{rasterise}{Whether to rasterise the points using ggrastr.}
+
+\item{...}{Other parameters passed on to ggrastr::rasterise}
 }
 \value{
 The function displays the scatter plots of the PCs

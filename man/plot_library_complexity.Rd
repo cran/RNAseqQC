@@ -4,10 +4,12 @@
 \alias{plot_library_complexity}
 \title{Plot the library complexity}
 \usage{
-plot_library_complexity(dds)
+plot_library_complexity(dds, show_progress = TRUE)
 }
 \arguments{
 \item{dds}{A DESeqDataSet}
+
+\item{show_progress}{Whether to show a progress bar of the computation.}
 }
 \value{
 A ggplot object of the ggplot2 package that contains the library complexity plot.

@@ -7,6 +7,7 @@
 plot_loadings(
   pca_res,
   PC = 1,
+  square = FALSE,
   color_by = NULL,
   annotate_top_n = 0,
   highlight_genes = NULL,
@@ -18,7 +19,9 @@ plot_loadings(
 
 \item{PC}{Number of the principal component to plot}
 
-\item{color_by}{Variable (column in \code{pca_res$loadings}) to color points by.}
+\item{square}{Whether to plot squared loadings. The squared loading is equal to the fraction of variance explained by the respective feature in the given principal component.}
+
+\item{color_by}{Variable (column in \code{pca_res$loadings}) to color points by. Can also be 'pc_sign' to color by the sign of the loading (useful in combination with the square = TRUE parameter).}
 
 \item{annotate_top_n}{Annotate the top n features with positive or negative loading}
 
