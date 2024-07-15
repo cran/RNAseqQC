@@ -1,3 +1,6 @@
+# RNAseqQC 0.2.1
+* bug fix to not convert factors to numerical before PCA plotting
+
 # RNAseqQC 0.2
 * Add the possibility to plot gene expression in plot_pca()
 * plot_pca() and plot_pca_scatters() now detect if the variable to color by is

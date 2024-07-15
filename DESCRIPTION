@@ -1,6 +1,6 @@
 Package: RNAseqQC
 Title: Quality Control for RNA-Seq Data
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Frederik", "Ziebell", email="f_ziebell@web.de", role = "cre"),
     person("Frederik", "Ziebell", email="frederik.x.ziebell@gsk.com", role = "aut", comment = c(ORCID = "0000-0003-3673-1721")),
@@ -22,7 +22,7 @@ VignetteBuilder: knitr
 URL: https://github.com/frederikziebell/RNAseqQC
 BugReports: https://github.com/frederikziebell/RNAseqQC/issues
 NeedsCompilation: no
-Packaged: 2024-07-01 06:16:54 UTC; fxz40010
+Packaged: 2024-07-15 14:16:36 UTC; fxz40010
 Author: Frederik Ziebell [cre],
   Frederik Ziebell [aut] (<https://orcid.org/0000-0003-3673-1721>),
   GlaxoSmithKline Research & Development Limited [cph] (GlaxoSmithKline
@@ -30,4 +30,4 @@ Author: Frederik Ziebell [cre],
     Road, Brentford, Middlesex TW8 9GS, United Kingdom)
 Maintainer: Frederik Ziebell <f_ziebell@web.de>
 Repository: CRAN
-Date/Publication: 2024-07-01 07:20:05 UTC
+Date/Publication: 2024-07-15 14:40:02 UTC
